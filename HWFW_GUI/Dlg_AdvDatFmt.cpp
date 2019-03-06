@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "HWFW_GUI.h"
 
 static uint32_t u32ItemIdx;
@@ -17,7 +17,7 @@ static void Release()
 
   if (lpData_WHWH)
   {
-    free(lpData_WHWH);
+    free (lpData_WHWH);
     lpData_WHWH = NULL;
   }
 
@@ -141,14 +141,14 @@ static BOOL UpdateView(HWND hDlg)
 
     if (hdrWHWH.u32Magic != HWNP_WHWH_MAGIC) return FALSE;
 
-    lpData_WHWH = malloc(hdrWHWH.u32RearSize);
+    lpData_WHWH = malloc (hdrWHWH.u32RearSize);
     if (lpData_WHWH == NULL) return FALSE;
-    memcpy_s(lpData_WHWH, hdrWHWH.u32RearSize, MakePointer32(lpItemData, sizeof(WHWH_HDR)), hdrWHWH.u32RearSize);
+    memcpy_s (lpData_WHWH, hdrWHWH.u32RearSize, MakePointer32 (lpItemData, sizeof (WHWH_HDR)), hdrWHWH.u32RearSize);
   }
 
   if (hdrWHWH.u32RearSize >= sizeof(UIMG_HDR))
   {
-    hdrUIMG = *(PUIMG_HDR)(lpData_WHWH);
+    hdrUIMG = * (PUIMG_HDR) (lpData_WHWH);
 
     if (hdrUIMG.ih_magic == IH_MAGIC_LE)
     {
@@ -159,7 +159,7 @@ static BOOL UpdateView(HWND hDlg)
       else
       {
         blUIMG = FALSE;
-        MessageBoxW(hDlg, L"UIMG数据长度大于项目数据长度!", L"警告", MB_ICONWARNING | MB_OK);
+        MessageBoxW(hDlg, L"UIMG data length is greater than project data length!", L"warning", MB_ICONWARNING | MB_OK);
       }
 
       /*
@@ -170,7 +170,7 @@ static BOOL UpdateView(HWND hDlg)
       else
       {
         blUIMG = FALSE;
-        MessageBoxW(hDlg, L"UIMG数据长度大于项目数据长度!", L"警告", MB_ICONWARNING | MB_OK);
+        MessageBoxW(hDlg, L"UIMG data length is greater than project data length!", L"warning", MB_ICONWARNING | MB_OK);
       }
       */
     }
@@ -197,7 +197,7 @@ static BOOL UpdateView(HWND hDlg)
     }
   }
 
-  UpdateView_WHWH(hDlg);
+  UpdateView_WHWH (hDlg);
   if (blUIMG) UpdateView_UIMG(hDlg);
 
   return TRUE;
@@ -241,7 +241,7 @@ static void SaveHeader_UIMG(HWND hDlg)
 
 static void BtnSave_WHWH(HWND hDlg)
 {
-  if (lpData_WHWH == NULL) return;
+  if (lpData_WHWH == NULL) returns;
 
   DWORD dwSize = sizeof(WHWH_HDR) + hdrWHWH.u32RearSize;
   LPVOID lpData = malloc(dwSize);
@@ -249,24 +249,24 @@ static void BtnSave_WHWH(HWND hDlg)
 
   if (lpData == NULL)
   {
-    SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"保存WHWH数据失败,内存不足!");
+    SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L "Failed to save WHWH data, insufficient memory!");
     return;
   }
 
-  SaveHeader_WHWH(hDlg);
+  SaveHeader_WHWH (hDlg);
 
-  //hdrWHWH.u32RearCRC = crc32_fast(lpData_WHWH, hdrWHWH.u32RearSize);
+  //hdrWHWH.u32RearCRC = crc32_fast (lpData_WHWH, hdrWHWH.u32RearSize);
 
   memcpy_s(lpData, dwSize, &hdrWHWH, sizeof(WHWH_HDR));
-  memcpy_s(MakePointer32(lpData, sizeof(WHWH_HDR)), dwSize - sizeof(WHWH_HDR), lpData_WHWH, hdrWHWH.u32RearSize);
+  memcpy_s (MakePointer32 (lpData, sizeof (WHWH_HDR)), dwSize - sizeof (WHWH_HDR), lpData_WHWH, hdrWHWH.u32RearSize);
 
-  nResult = HWNP_SetItemData(u32ItemIdx, lpData, dwSize);
+  nResult = HWNP_SetItemData (u32ItemIdx, lpData, dwSize);
   free(lpData);
 
   if (nResult != 0)
-    SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"保存WHWH数据失败,错误码:[%d]!", nResult);
+    SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L "Failed to save WHWH data, error code: [%d]!", nResult);
   else
-    SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"保存WHWH数据完成.");
+    SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"Save WHWH data is completed.");
 }
 
 static void BtnSave_UIMG(HWND hDlg)
@@ -279,11 +279,11 @@ static void BtnSave_UIMG(HWND hDlg)
 
     if (lpData == NULL)
     {
-      SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"保存UIMG数据失败,内存不足!");
+      SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L "Failed to save UIMG data, insufficient memory!");
       return;
     }
 
-    //SaveHeader_WHWH(hDlg);
+    // SaveHeader_WHWH (hDlg);
     SaveHeader_UIMG(hDlg);
 
     //hdrUIMG.ih_dcrc = BigLittleSwap32(crc32_fast(lpData_UIMG, BigLittleSwap32(hdrUIMG.ih_size)));
@@ -300,17 +300,17 @@ static void BtnSave_UIMG(HWND hDlg)
     memcpy_s(MakePointer32(lpData, sizeof(WHWH_HDR) + sizeof(UIMG_HDR)), dwSize - (sizeof(WHWH_HDR) + sizeof(UIMG_HDR)), lpData_UIMG, BigLittleSwap32(hdrUIMG.ih_size));
 
     hdrWHWH.u32RearSize = sizeof(UIMG_HDR) + BigLittleSwap32(hdrUIMG.ih_size);
-    hdrWHWH.u32RearCRC = crc32_fast(MakePointer32(lpData, sizeof(WHWH_HDR)), hdrWHWH.u32RearSize);
+    hdrWHWH.u32RearCRC = crc32_fast (MakePointer32 (lpData, sizeof (WHWH_HDR)), hdrWHWH.u32RearSize);
 
     memcpy_s(lpData, dwSize, &hdrWHWH, sizeof(WHWH_HDR));
 
-    nResult = HWNP_SetItemData(u32ItemIdx, lpData, dwSize);
+    nResult = HWNP_SetItemData (u32ItemIdx, lpData, dwSize);
     free(lpData);
 
     if (nResult != 0)
-      SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"保存UIMG数据失败,错误码:[%d]!", nResult);
+      SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L "Failed to save UIMG data, error code: [%d]!", nResult);
     else
-      SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"保存UIMG数据完成.");
+      SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L "Save UIMG data is completed.");
   }
 }
 
@@ -379,15 +379,15 @@ INT_PTR CALLBACK DlgProc_AdvDatFmt(HWND hDlg, UINT message, WPARAM wParam, LPARA
       if (u32DataSize < sizeof(WHWH_HDR) + hdrWHWH.u32RearSize)
       {
         //EnableWindow(hDlg, FALSE);
-        MessageBoxW(hDlg, L"WHWH数据长度大于项目数据长度!", L"错误", MB_ICONERROR | MB_OK);
+        MessageBoxW (hDlg, L"WHWH data length is greater than project data length!", L"Error", MB_ICONERROR | MB_OK);
         return (INT_PTR)TRUE;
       }
 
       if (UpdateView(hDlg) == FALSE)
       {
         Release();
-        MessageBoxW(hDlg, L"解析高级数据结构出现错误!", L"警告", MB_ICONWARNING | MB_OK);
-        EndDialog(hDlg, 0);
+        MessageBoxW(hDlg, L" parsing advanced data structure error!", L"warning", MB_ICONWARNING | MB_OK);
+        EndDialog (hDgg, 0);
         return (INT_PTR)FALSE;
       }
 
@@ -410,20 +410,20 @@ INT_PTR CALLBACK DlgProc_AdvDatFmt(HWND hDlg, UINT message, WPARAM wParam, LPARA
     {
       switch (wId)
       {
-      case IDC_BTN_WHCHK:   //检查WHWH数据CRC32
+      Case IDC_BTN_WHCHK: //Check WHWH data CRC32
       {
         uint32_t u32CRC;
 
-        u32CRC = crc32_fast(lpData_WHWH, hdrWHWH.u32RearSize);
+        u32CRC = crc32_fast (lpData_WHWH, hdrWHWH.u32RearSize);
 
         if (u32CRC == hdrWHWH.u32RearCRC)
-          SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"WHWH数据CRC32检查正确.");
+          SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"WHWH data CRC32 check correctly.");
         else
-          SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"WHWH数据CRC32检查不正确, 计算结果:0x%08X!", u32CRC);
+          SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"WHWH data CRC32 check is incorrect, calculation result: 0x%08X!", u32CRC);
       }
       break;
 
-      case IDC_BTN_UBCH:    //检查UIMG头部CRC32
+      Case IDC_BTN_UBCH: //Check UIMG header CRC32
       if (blUIMG)
       {
         uint32_t u32CRC;
@@ -435,13 +435,13 @@ INT_PTR CALLBACK DlgProc_AdvDatFmt(HWND hDlg, UINT message, WPARAM wParam, LPARA
         u32CRC = crc32_fast(&hdrTmp, sizeof(UIMG_HDR));
 
         if (u32CRC == BigLittleSwap32(hdrUIMG.ih_hcrc))
-          SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"UIMG头部CRC32检查正确.");
+          SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"UIMG header CRC32 check correctly.");
         else
-          SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"UIMG头部CRC32检查不正确, 计算结果:%08X (LE)!", u32CRC);
+          SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L" UIMG header CRC32 check is incorrect, calculation result: %08X (LE)!", u32CRC);
       }
       break;
 
-      case IDC_BTN_UBCD:    //检查UIMG数据CRC32
+      Case IDC_BTN_UBCD: //Check UIMG data CRC32
       if (blUIMG)
       {
         uint32_t u32CRC;
@@ -449,27 +449,27 @@ INT_PTR CALLBACK DlgProc_AdvDatFmt(HWND hDlg, UINT message, WPARAM wParam, LPARA
         u32CRC = crc32_fast(lpData_UIMG, BigLittleSwap32(hdrUIMG.ih_size));
 
         if (u32CRC == BigLittleSwap32(hdrUIMG.ih_dcrc))
-          SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"UIMG数据CRC32检查正确.");
+          SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"UIMG data CRC32 check correctly.");
         else
-          SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"UIMG数据CRC32检查不正确, 计算结果:%08X (LE)!", u32CRC);
+          SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"UIMG data CRC32 check is incorrect, calculation result: %08X (LE)!", u32CRC);
       }
       break;
 
-      case IDC_BTN_WHEXP:   //导出WHWH数据
+      Case IDC_BTN_WHEXP: //Export WHWH data
       {
         WCHAR wsTmp[MAX_PATH] = { 0 };
 
         if (GetSaveFilePath(hDlg, wsTmp, MAX_PATH))
         {
-          if (ExportToFile(wsTmp, lpData_WHWH, hdrWHWH.u32RearSize))
-            SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"导出WHWH数据完成.");
+          if (ExportToFile (wsTmp, lpData_WHWH, hdrWHWH.u32RearSize))
+            SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L "Export WHWH data completion.");
           else
-            SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"导出WHWH数据失败,错误码:[%d]!", GetLastError());
+            SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L "Failed to export WHWH data, error code: [%d]!", GetLastError());
         }
       }
       break;
 
-      case IDC_BTN_WHIMP:   //导入WHWH数据
+      Case IDC_BTN_WHIMP: //Import WHWH data
       {
         LPVOID lpData;
         DWORD dwDataSize;
@@ -479,25 +479,25 @@ INT_PTR CALLBACK DlgProc_AdvDatFmt(HWND hDlg, UINT message, WPARAM wParam, LPARA
         {
           if (ImportFromFile(wsTmp, &lpData, &dwDataSize) == FALSE)
           {
-            SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"打开文件失败,错误码:[%d]!", GetLastError());
+            SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"Failed to open file, error code: [%d]!", GetLastError());
             break;
           }
 
-          SaveHeader_WHWH(hDlg);
+          SaveHeader_WHWH (hDlg);
 
-          if (lpData_WHWH) free(lpData_WHWH);
+          if (lpData_WHWH) free (lpData_WHWH);
 
           lpData_WHWH = lpData;
           hdrWHWH.u32RearSize = dwDataSize;
           hdrWHWH.u32RearCRC = crc32_fast(lpData, dwDataSize);
 
-          SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"导入WHWH数据完成.");
+          SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L "Import WHWH data completion.");
           UpdateView(hDlg);
         }
       }
       break;
 
-      case IDC_BTN_UBEXP:   //导出UIMG数据
+      Case IDC_BTN_UBEXP: //Export UIMG data
       if (blUIMG)
       {
         WCHAR wsTmp[MAX_PATH] = { 0 };
@@ -505,14 +505,14 @@ INT_PTR CALLBACK DlgProc_AdvDatFmt(HWND hDlg, UINT message, WPARAM wParam, LPARA
         if (GetSaveFilePath(hDlg, wsTmp, MAX_PATH))
         {
           if (ExportToFile(wsTmp, lpData_UIMG, BigLittleSwap32(hdrUIMG.ih_size)))
-            SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"导出UIMG数据完成.");
+            SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L "Export UIMG data is completed.");
           else
-            SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"导出UIMG数据失败,错误码:[%d]!", GetLastError());
+            SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L "Failed to export UIMG data, error code: [%d]!", GetLastError());
         }
       }
       break;
 
-      case IDC_BTN_UBIMP:   //导入UIMG数据
+      Case IDC_BTN_UBIMP: //Import UIMG data
       if (blUIMG)
       {
         LPVOID lpData;
@@ -523,11 +523,11 @@ INT_PTR CALLBACK DlgProc_AdvDatFmt(HWND hDlg, UINT message, WPARAM wParam, LPARA
         {
           if (ImportFromFile(wsTmp, &lpData, &dwDataSize) == FALSE)
           {
-            SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"打开文件失败,错误码:[%d]!", GetLastError());
+            SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"Failed to open file, error code: [%d]!", GetLastError());
             break;
           }
 
-          SaveHeader_WHWH(hDlg);
+          SaveHeader_WHWH (hDlg);
           SaveHeader_UIMG(hDlg);
 
           if (lpData_UIMG) free(lpData_UIMG);
@@ -545,12 +545,12 @@ INT_PTR CALLBACK DlgProc_AdvDatFmt(HWND hDlg, UINT message, WPARAM wParam, LPARA
             hdrUIMG.ih_hcrc = BigLittleSwap32(crc32_fast(&hdrTmp, sizeof(UIMG_HDR)));
           }
 
-          //同步WHWH数据
+          / / Synchronize WHWH data
           dwDataSize += sizeof(UIMG_HDR);
           lpData = malloc(dwDataSize);
           if (lpData == NULL)
           {
-            SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"同步WHWH数据失败,内存不足!");
+            SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L" Synchronous WHWH data failed, insufficient memory!");
             UpdateView(hDlg);
             break;
           }
@@ -558,45 +558,45 @@ INT_PTR CALLBACK DlgProc_AdvDatFmt(HWND hDlg, UINT message, WPARAM wParam, LPARA
           memcpy_s(lpData, dwDataSize, &hdrUIMG, sizeof(UIMG_HDR));
           memcpy_s(MakePointer32(lpData, sizeof(UIMG_HDR)), dwDataSize - sizeof(UIMG_HDR), lpData_UIMG, BigLittleSwap32(hdrUIMG.ih_size));
 
-          if (lpData_WHWH) free(lpData_WHWH);
+          if (lpData_WHWH) free (lpData_WHWH);
           lpData_WHWH = lpData;
           hdrWHWH.u32RearSize = dwDataSize;
           hdrWHWH.u32RearCRC = crc32_fast(lpData, dwDataSize);
 
 
-          SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L"导入UIMG数据完成.");
+          SetSubStatus(GetDlgItem(hDlg, IDC_LBL_ADF_STATUS), L "Import UIMG data is completed.");
           UpdateView(hDlg);
         }
       }
       break;
 
-      case IDC_BTN_WHSAVE:    //保存WHWH 头部 + 数据
-      BtnSave_WHWH(hDlg);
+      Case IDC_BTN_WHSAVE: //Save WHWH header + data
+      BtnSave_WHWH (hDlg);
       break;
 
-      case IDC_BTN_UBSAVE:    //保存UIMG 头部 + 数据
+      Case IDC_BTN_UBSAVE: //Save UIMG header + data
       BtnSave_UIMG(hDlg);
       break;
 
-      case IDC_BTN_ADF_SAVE:    //保存WHWH 头部 + UIMG 头部 + 数据
+      Case IDC_BTN_ADF_SAVE: //Save WHWH header + UIMG header + data
       {
         if (blUIMG && lpData_UIMG)
         {
           //SNDMSG(hDlg, WM_COMMAND, MAKEWPARAM(IDC_BTN_WHSAVE, BN_CLICKED), NULL);
-          SaveHeader_WHWH(hDlg);
+          SaveHeader_WHWH (hDlg);
           BtnSave_UIMG(hDlg);
         }
         else
         {
-          BtnSave_WHWH(hDlg);
+          BtnSave_WHWH (hDlg);
         }
 
         Release();
-        EndDialog(hDlg, IDOK);
+        EndDialog (hDlg, IDOK);
       }
       break;
 
-      case IDC_BTN_ADF_BACK:    //返回上级窗口
+      Case IDC_BTN_ADF_BACK: //Return to the superior window
       {
         Release();
         EndDialog(hDlg, IDCANCEL);
