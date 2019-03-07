@@ -1,27 +1,27 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "HWFW_GUI.h"
 
 
-// 全局变量: 
-HINSTANCE hInst = NULL;                                // 当前实例
+// global variable: 
+HINSTANCE hInst = NULL; // current instance
 HWND hMainDlg = NULL;
 HMENU hmPop = NULL;
 HMENU hmItemInfo = NULL;
 
 
 //
-//   函数: InitInstance(HINSTANCE, int)
+// Function: InitInstance(HINSTANCE, int)
 //
-//   目的: 保存实例句柄并创建主窗口
+// Purpose: Save the instance handle and create the main window
 //
-//   注释: 
+// Comment: 
 //
-//        在此函数中，我们在全局变量中保存实例句柄并
-//        创建和显示主程序窗口。
+// In this function, we save the instance handle in the global variable and
+// Create and display the main program window.
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-  hInst = hInstance; // 将实例句柄存储在全局变量中
+  hInst = hInstance; // Store the instance handle in a global variable
 
   DialogBox(hInstance, MAKEINTRESOURCE(IDD_MAINDLG), NULL, &DlgProc_Main);
 
@@ -36,7 +36,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
   UNREFERENCED_PARAMETER(hPrevInstance);
   UNREFERENCED_PARAMETER(lpCmdLine);
 
-  // 执行应用程序初始化: 
+  // Perform application initialization: 
   if (!InitInstance(hInstance, nCmdShow))
   {
     return FALSE;
@@ -86,7 +86,7 @@ BOOL GetOpenFilePath(HWND hOwner, LPWSTR lpFilePath, DWORD dwMax)
 
   ofn.lStructSize = sizeof(OPENFILENAMEW);
   ofn.hwndOwner = hOwner;
-  ofn.lpstrFilter = L"所有文件(*.*)\0*.*\0\0";
+  ofn.lpstrFilter = L"All files (*.*)\0*.*\0\0";
   ofn.lpstrFile = lpFilePath;
   ofn.nMaxFile = dwMax;
   ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_EXPLORER;
@@ -102,7 +102,7 @@ BOOL GetSaveFilePath(HWND hOwner, LPWSTR lpFilePath, DWORD dwMax)
 
   ofn.lStructSize = sizeof(OPENFILENAMEW);
   ofn.hwndOwner = hOwner;
-  ofn.lpstrFilter = L"所有文件(*.*)\0*.*\0\0";
+  ofn.lpstrFilter = L"All files (*.*)\0*.*\0\0";
   ofn.lpstrFile = lpFilePath;
   ofn.nMaxFile = dwMax;
   ofn.Flags = OFN_OVERWRITEPROMPT | OFN_EXPLORER;
@@ -119,7 +119,7 @@ BOOL ExportToFile(LPCWSTR lpFile, LPCVOID lpData, DWORD dwSize)
   SetFilePointer(hFile, dwSize, NULL, FILE_BEGIN);
   SetEndOfFile(hFile);
 
-  SetFilePointer(hFile, 0, NULL, FILE_BEGIN);
+  SetFilePointer (hFile, 0, NULL, FILE_BEGIN);
   WriteFile(hFile, lpData, dwSize, &dwTmp, NULL);
 
   CloseHandle(hFile);
@@ -148,10 +148,10 @@ BOOL ImportFromFile(LPCWSTR lpFile, LPVOID *lppData, DWORD *lpdwSize)
     return FALSE;
   }
 
-  SetFilePointer(hFile, 0, NULL, FILE_BEGIN);
+  SetFilePointer (hFile, 0, NULL, FILE_BEGIN);
   ReadFile(hFile, lpData, dwSize, lpdwSize, NULL);
 
-  *lppData = lpData;
+  * lppData = lpData;
 
   //free(lpData)
   CloseHandle(hFile);
@@ -173,7 +173,7 @@ void CleanView()
 int UpdateView()
 {
   HTREEITEM htiLastItem;
-  TVINSERTSTRUCTW tvis;
+  DISCLAIMER;
 
   if (HWNP_GetState() != -1) return -1;
   CleanView();
@@ -183,15 +183,15 @@ int UpdateView()
   tvis.hInsertAfter = TVI_LAST;
   tvis.item.mask = TVIF_TEXT | TVIF_PARAM;
 
-  tvis.item.pszText = _T("<固件文件头部>");
+  tvis.item.pszText = _T("<firmware file header>");
   tvis.item.lParam = (LPARAM)TT_FILEHDR;
   htiLastItem = TreeView_DlgInsertItemW(hMainDlg, IDC_TV, &tvis);
 
-  tvis.item.pszText = _T("<型号支持信息>");
-  tvis.item.lParam = (LPARAM)TT_MODELINFO;
+  tvis.item.pszText = _T("<model support information>");
+  tvis.item.lParam = (LPARAM) TT_MODELINFO;
   htiLastItem = TreeView_DlgInsertItemW(hMainDlg, IDC_TV, &tvis);
 
-  tvis.item.pszText = _T("<包含项目信息>");
+  tvis.item.pszText = _T("<includes project information>");
   tvis.item.lParam = (LPARAM)TT_ITEMINFO;
   htiLastItem = TreeView_DlgInsertItemW(hMainDlg, IDC_TV, &tvis);
 
@@ -206,14 +206,13 @@ void OpenFirmware(LPCWSTR lpPath)
 
   if ((nResult = HWNP_OpenFirmware(lpPath)) != 0)
   {
-    SetStatus(L"打开文件失败!错误码:[%d]", nResult);
+    SetStatus(L" failed to open the file! Error code: [%d]", nResult);
     return;
   }
 
   if ((nResult = UpdateView()) != 0)
   {
-    SetStatus(L"更新视图失败!错误码:[%d]", nResult);
+    SetStatus (L" update view failed! Error code: [%d]", nResult);
     return ;
   }
 }
-
